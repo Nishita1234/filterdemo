@@ -68,11 +68,11 @@ function App() {
 
   const filteredActive = active.filter(distinct);
 
-  const [fName, setFName] = useState("");
+  //const [fName, setFName] = useState("");
   const [cityName, setCityName] = useState([]);
 
-  const [setBig, setSetBig] = useState([]);
-
+  //const [setBig, setSetBig] = useState([]);
+//let finalName;
   const handleChange = (e) => {
     const { value, checked } = e.target;
 
@@ -94,8 +94,8 @@ console.log(`x`, x);
 
   let xyz = [];
   let xxx;
-  let yyy;
-  const [filteredArray, setFilteredArray] = useState([]);
+  //let yyy;
+  //const [filteredArray, setFilteredArray] = useState([]);
 
   if (x.length > 0) {
     for (let i = 0; i < x.length; i++) {
@@ -123,7 +123,8 @@ console.log(`x`, x);
           console.log(`keyOfValue`, keyOfValue);
           console.log(`keyOfPrev`, keyOfPrev);
           if (keyOfPrev !== keyOfValue) {
-            mainArray = xyz;
+
+            //mainArray = xyz;
             big = mainArray.filter(function (e) {
               return (
                 e.city == x[i] ||
@@ -141,12 +142,11 @@ console.log(`x`, x);
             console.log(`mainArray`, mainArray);
           } else {
             xyz.push(big[j]);
-           
           }
         }
       }
     }
-    console.log(`xxx`, xxx);
+    //console.log(`xxx`, xxx);
     mainArray = xyz;
     if(xxx){
       mainArray = xxx
@@ -154,6 +154,7 @@ console.log(`x`, x);
     
   }
   console.log(`mainArray`, mainArray);
+  
   //console.log(`filteredArray`, filteredArray);
   return (
     <div>
@@ -247,13 +248,13 @@ console.log(`x`, x);
         type="text"
         name="name"
        
-        onChange={(e) => {
-          /*  if(e.target.value !== ""){
+        /* onChange={(e) => {
+            
             setFName(e.target.value);
-            x.push(fName);
-          }  */
+            finalName = fName;
           
-        }} 
+          
+        }}  */
       />
       {/* {fName} */}
       <table border="1px" align="center">
