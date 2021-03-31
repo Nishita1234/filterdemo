@@ -1,13 +1,15 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
-
+import CustomTable from "./components/TableRe";
 
 let data = {
-  city : [], 
-  category : [],
-  type : [], 
-  active : []
-} 
+  city: [],
+  category: [],
+  type: [],
+  active: [],
+  name: "",
+};
+
 function App() {
   let mainArray = [
     {
@@ -43,15 +45,45 @@ function App() {
       active: "FALSE",
     },
   ];
-  
+  //console.log(`mainArray`, mainArray);
+
+  const headers = Object.keys(mainArray[0]);
+  console.log(`headers`, headers);
+
+  let filteredAry = headers.filter(function (e) {
+    return e !== "id";
+  });
+  filteredAry = filteredAry.filter(function (e) {
+    return e !== "name";
+  });
 
   
+
+  const myMainArrayValues = filteredAry.map((v, index) => {
+    return (
+      mainArray.map((value,i)=>{
+        return mainArray[i][v]
+      })
+    )
+  });  
+    
+
+  const distinct = (v, i, s) => {
+    return s.indexOf(v) === i;
+  };
+ 
+  const distinctArrayValue = myMainArrayValues.map((v,i)=>{
+    return v.filter(distinct)
+  })
+
+  console.log(`distinctArrayValue`, distinctArrayValue);
 
   const city = mainArray.map((v, i) => {
     return mainArray[i].city;
   });
+  //console.log(`city`, city);
 
-  const cat = mainArray.map((v, i) => {
+  const category = mainArray.map((v, i) => {
     return mainArray[i].category;
   });
 
@@ -63,58 +95,110 @@ function App() {
     return mainArray[i].active;
   });
 
-  const distinct = (v, i, s) => {
-    return s.indexOf(v) === i;
-  };
-
+  
   const filteredCity = city.filter(distinct);
-
-  const filteredCat = cat.filter(distinct);
+  //console.log(`filteredCity`, filteredCity);
+  const filteredCat = category.filter(distinct);
 
   const filteredType = type.filter(distinct);
 
   const filteredActive = active.filter(distinct);
 
-  const [n, setN] = useState("");
-  
   const [filteredData, setFilteredData] = useState(mainArray);
 
   const handleChange = (e) => {
     const { value, name, checked } = e.target;
-    
+
     if (checked === true) {
-      data[name].push(value);     
+      data[name].push(value);
     } else {
-      data[name] = data[name].filter((item) => item !== value);   
+      if (name === "name") {
+        data[name] = value;
+        console.log(`data[name]`, data[name]);
+      } else {
+        data[name] = data[name].filter((item) => item !== value);
+      }
     }
 
-    console.log(`data`, data);  
+    console.log(`data`, data);
     setFilteredData(multiFilter(mainArray, data));
-
   };
-     
+
   function multiFilter(array, filters) {
-    
     const filterKeys = Object.keys(filters);
+    //console.log(`filterKeys`, filterKeys);
     // filters all elements passing the criteria
     return array.filter((item) => {
       // dynamically validate all filter criteria
-      return filterKeys.every(key => {
+      //console.log(`item`, item)
+      return filterKeys.every((key) => {
+        //console.log(`key`, key);
+        if (key === "name")
+          return (
+            item.name.toLowerCase().indexOf(filters[key].toLowerCase()) !== -1
+          );
         // ignores an empty filter
+
+        //console.log(`filterKeys`, filterKeys);
         if (!filters[key].length) return true;
+        //console.log(`filters[key]`, filters[key]);
+        //console.log(`item[key]`, item[key]);
         return filters[key].includes(item[key]);
       });
     });
   }
 
   //console.log(`filteredData`, filteredData);
-  
 
-  
-  
   return (
     <div>
-      <h1>City</h1>
+
+       
+       <table>
+         <thead>
+           <tr>
+           {
+        filteredAry.map((value, index)=>{
+          return (
+            <>
+            <th key={index}>{value}</th>  
+           
+            </>          
+          )  
+        })
+      }  
+           </tr>
+         </thead>
+         <tbody>
+      {
+
+        distinctArrayValue.map((v,i)=>{
+          
+          return(
+            <>
+            
+            <tr key={i}>               
+                {v.map((value,index)=>{                 
+                return   <td>{value}<label className="switch">
+                <input
+                  type="checkbox"
+                  name="category"
+                  value={value}
+                  onChange={handleChange}
+                />
+                <span className="slider round"></span>
+              </label> </td>
+                })}
+            </tr>
+          </>
+          )
+        })
+      }
+      </tbody>
+      </table> 
+      
+
+      {/* <h1>City</h1>
       <table>
         {filteredCity.map((v, i) => {
           return (
@@ -135,6 +219,7 @@ function App() {
           );
         })}
       </table>
+
       <h1>Category</h1>
       <table>
         {filteredCat.map((v, i) => {
@@ -156,6 +241,7 @@ function App() {
           );
         })}
       </table>
+
       <h1>Type</h1>
       <table>
         {filteredType.map((v, i) => {
@@ -177,6 +263,7 @@ function App() {
           );
         })}
       </table>
+
       <h1>Active</h1>
       <table>
         {filteredActive.map((v, i) => {
@@ -197,66 +284,18 @@ function App() {
             </tr>
           );
         })}
-      </table>
+      </table> */}
       <br />
       <label>Name</label>
-      <input
-        type="text"
-        onKeyUp={handleChange}
-      />
-      
-      <table border="1px" align="center">
-        <thead>
-          <tr>
-            <th>Id</th>
-            <th>Name</th>
-            <th>City</th>
-            <th>Category</th>
-            <th>Type</th>
-            <th>Active</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredData.map((i, index) => (
-            <tr key={index}>
-              <td>{i.id}</td>
-              <td>{i.name}</td>
-              <td>{i.city}</td>
-              <td>{i.category}</td>
-              <td>{i.type}</td>
-              <td>{i.active}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      <input type="text" name="name" onKeyUp={handleChange} />
+
+      <CustomTable filteredData={filteredData} theadKeyMap={headers} />
     </div>
   );
 }
 
 export default App;
 
- /*  if (fName) {
-      // console.log(`fName`, fName);
-      filteredName = data.filter(function (e) {
-        return e.name == fName;
-      });
-      console.log(`filteredName`, filteredName);
-      //setData(filteredName);
-    } */
 
-     /* function getKeyByValue(object, value) {
-    for (var prop in object) {
-      if (object.hasOwnProperty(prop)) {
-        if (object[prop] === value) return prop;
-      }
-    }
-  } */
- /* if (n) {
-    console.log(`n`, n);
-    let filteredName = filteredData.filter(function (e) {
-      return e.name == n;
-    });
-    console.log(`filteredName`, filteredName);
-    //setFilteredData(filteredName);
-    //setData(filteredName);
-  } */
+
+ 

@@ -372,3 +372,14 @@ export default App;
           
          }   */
 //console.log('mainArray', mainArray);
+
+
+
+
+/*  const uniqueData = (mainArray) => {
+    const distinct = (v, i, s) => {
+      return s.indexOf(v) === i;
+    };
+    return mainArray.filter(distinct);
+  }; 
+console.log(`mainArray.filter(distinct)`, mainArray.filter(distinct)); */
