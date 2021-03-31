@@ -57,24 +57,19 @@ function App() {
     return e !== "name";
   });
 
-  
-
   const myMainArrayValues = filteredAry.map((v, index) => {
-    return (
-      mainArray.map((value,i)=>{
-        return mainArray[i][v]
-      })
-    )
-  });  
-    
+    return mainArray.map((value, i) => {
+      return mainArray[i][v];
+    });
+  });
 
   const distinct = (v, i, s) => {
     return s.indexOf(v) === i;
   };
- 
-  const distinctArrayValue = myMainArrayValues.map((v,i)=>{
-    return v.filter(distinct)
-  })
+
+  const distinctArrayValue = myMainArrayValues.map((v, i) => {
+    return v.filter(distinct);
+  });
 
   console.log(`distinctArrayValue`, distinctArrayValue);
 
@@ -95,7 +90,6 @@ function App() {
     return mainArray[i].active;
   });
 
-  
   const filteredCity = city.filter(distinct);
   //console.log(`filteredCity`, filteredCity);
   const filteredCat = category.filter(distinct);
@@ -152,51 +146,49 @@ function App() {
 
   return (
     <div>
-
-       
-       <table>
-         <thead>
-           <tr>
-           {
-        filteredAry.map((value, index)=>{
-          return (
-            <>
-            <th key={index}>{value}</th>  
+      <table>
+        <thead>
+          <tr>
+            {filteredAry.map((value, index) => {
+              return (
+                <>
+                  <th key={index}>{value}</th>
+                </>
+              );
+            })}
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
            
-            </>          
-          )  
-        })
-      }  
-           </tr>
-         </thead>
-         <tbody>
-      {
-
-        distinctArrayValue.map((v,i)=>{
+          {distinctArrayValue.map((v, i) => {
+            return (
+              <>
+                {/* <tr key={i}> */}
+                  {v.map((value, index) => {
+                    return (
+                      <td>
+                        {value}
+                        <label className="switch">
+                          <input
+                            type="checkbox"
+                            name="city"
+                            value={value}
+                            onChange={handleChange}
+                          />
+                          <span className="slider round"></span>
+                        </label>{" "}
+                      </td>
+                    );
+                  })}
+               {/*  </tr> */}
+              </>
+            );
+          })}
           
-          return(
-            <>
-            
-            <tr key={i}>               
-                {v.map((value,index)=>{                 
-                return   <td>{value}<label className="switch">
-                <input
-                  type="checkbox"
-                  name="category"
-                  value={value}
-                  onChange={handleChange}
-                />
-                <span className="slider round"></span>
-              </label> </td>
-                })}
-            </tr>
-          </>
-          )
-        })
-      }
-      </tbody>
-      </table> 
-      
+          </tr>
+        </tbody>
+      </table>
 
       {/* <h1>City</h1>
       <table>
@@ -295,7 +287,3 @@ function App() {
 }
 
 export default App;
-
-
-
- 
