@@ -1,14 +1,7 @@
 import "./App.css";
 import React, { useState, useEffect } from "react";
 import CustomTable from "./components/TableRe";
-
-let data = {
-  city: [],
-  category: [],
-  type: [],
-  active: [],
-  name: "",
-};
+//import CustomTable from "./components/TableRe";
 
 function App() {
   let mainArray = [
@@ -19,6 +12,7 @@ function App() {
       category: "one",
       type: "A",
       active: "FALSE",
+      // state: "guj"
     },
     {
       id: 2,
@@ -27,6 +21,7 @@ function App() {
       category: "one",
       type: "B",
       active: "FALSE",
+      //state: "guj"
     },
     {
       id: 3,
@@ -35,6 +30,7 @@ function App() {
       category: "one",
       type: "B",
       active: "TRUE",
+      //state: "raj"
     },
     {
       id: 4,
@@ -43,6 +39,7 @@ function App() {
       category: "two",
       type: "C",
       active: "FALSE",
+      //state: "mah"
     },
   ];
   //console.log(`mainArray`, mainArray);
@@ -71,80 +68,60 @@ function App() {
     return v.filter(distinct);
   });
 
-  console.log(`distinctArrayValue`, distinctArrayValue);
-
-  const city = mainArray.map((v, i) => {
-    return mainArray[i].city;
-  });
-  //console.log(`city`, city);
-
-  const category = mainArray.map((v, i) => {
-    return mainArray[i].category;
-  });
-
-  const type = mainArray.map((v, i) => {
-    return mainArray[i].type;
-  });
-
-  const active = mainArray.map((v, i) => {
-    return mainArray[i].active;
-  });
-
-  const filteredCity = city.filter(distinct);
-  //console.log(`filteredCity`, filteredCity);
-  const filteredCat = category.filter(distinct);
-
-  const filteredType = type.filter(distinct);
-
-  const filteredActive = active.filter(distinct);
-
+  let myObj = {};
+  let data = {};
+  for (let i = 0; i < filteredAry.length; i++) {
+    myObj[filteredAry[i]] = [];
+    data[filteredAry[i]] = [];
+    myObj[filteredAry[i]].push(distinctArrayValue[i]);
+  }
+  
+ data.name = "";
+ console.log(`data`, data);
+  const [myData, setMyData] = useState(data);
+ 
   const [filteredData, setFilteredData] = useState(mainArray);
 
   const handleChange = (e) => {
     const { value, name, checked } = e.target;
 
     if (checked === true) {
-      data[name].push(value);
+      
+     // data[name].push(value);
+      setMyData({...myData, [name]:[...myData[name], value]});
     } else {
       if (name === "name") {
-        data[name] = value;
-        console.log(`data[name]`, data[name]);
+       // data[name] = value;
+        setMyData({...myData, [name]:value})
       } else {
-        data[name] = data[name].filter((item) => item !== value);
+        //data[name] = data[name].filter((item) => item !== value);
+        setMyData({...myData,[name]: [...myData[name].filter((item) => item !== value)] })
       }
     }
-
-    console.log(`data`, data);
-    setFilteredData(multiFilter(mainArray, data));
   };
+  console.log(`myData`, myData);
+
+  useEffect(() => {
+    setFilteredData(multiFilter(mainArray, myData));
+
+  }, [myData]);
+
 
   function multiFilter(array, filters) {
     const filterKeys = Object.keys(filters);
-    //console.log(`filterKeys`, filterKeys);
-    // filters all elements passing the criteria
+   
     return array.filter((item) => {
-      // dynamically validate all filter criteria
-      //console.log(`item`, item)
       return filterKeys.every((key) => {
-        //console.log(`key`, key);
-        if (key === "name")
+       if (key === "name")
           return (
             item.name.toLowerCase().indexOf(filters[key].toLowerCase()) !== -1
           );
-        // ignores an empty filter
-
-        //console.log(`filterKeys`, filterKeys);
-        if (!filters[key].length) return true;
-        //console.log(`filters[key]`, filters[key]);
-        //console.log(`item[key]`, item[key]);
+       if (!filters[key].length) return true;
         return filters[key].includes(item[key]);
       });
     });
   }
-
-  //console.log(`filteredData`, filteredData);
-
-  return (
+return (
     <div>
       <table>
         <thead>
@@ -160,123 +137,44 @@ function App() {
         </thead>
         <tbody>
           <tr>
-           
-          {distinctArrayValue.map((v, i) => {
-            return (
-              <>
-                {/* <tr key={i}> */}
-                  {v.map((value, index) => {
-                    return (
-                      <td>
-                        {value}
-                        <label className="switch">
-                          <input
-                            type="checkbox"
-                            name="city"
-                            value={value}
-                            onChange={handleChange}
-                          />
-                          <span className="slider round"></span>
-                        </label>{" "}
-                      </td>
-                    );
-                  })}
-               {/*  </tr> */}
-              </>
-            );
-          })}
-          
+
+            {Object.values(myObj).map((value, index) => {
+              return (
+                <>
+                  {
+                    value.map((v, i) => {
+                        return (
+                        
+                          <td>
+                            {
+                              v.map((val,ind) => {
+                                return ( 
+                                    <tr>
+                                      {val}
+                                      <label className="switch">
+                                        <input
+                                          type="checkbox"
+                                          name={filteredAry[index]}
+                                          value={val}
+                                          onChange={handleChange}
+                                        />
+                                        <span className="slider round"></span>
+                                      </label>
+                                    </tr>         
+                                )
+                              })
+                            }
+                          </td>
+                      )
+                    })
+                  }
+                </>
+              )
+            })
+            }
           </tr>
         </tbody>
       </table>
-
-      {/* <h1>City</h1>
-      <table>
-        {filteredCity.map((v, i) => {
-          return (
-            <tr key={i}>
-              <td>
-                {v}
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="city"
-                    value={v}
-                    onChange={handleChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </td>
-            </tr>
-          );
-        })}
-      </table>
-
-      <h1>Category</h1>
-      <table>
-        {filteredCat.map((v, i) => {
-          return (
-            <tr key={i}>
-              <td>
-                {v}{" "}
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="category"
-                    value={v}
-                    onChange={handleChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </td>
-            </tr>
-          );
-        })}
-      </table>
-
-      <h1>Type</h1>
-      <table>
-        {filteredType.map((v, i) => {
-          return (
-            <tr key={i}>
-              <td>
-                {v}{" "}
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="type"
-                    value={v}
-                    onChange={handleChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </td>
-            </tr>
-          );
-        })}
-      </table>
-
-      <h1>Active</h1>
-      <table>
-        {filteredActive.map((v, i) => {
-          return (
-            <tr key={i}>
-              <td>
-                {v}{" "}
-                <label className="switch">
-                  <input
-                    type="checkbox"
-                    name="active"
-                    value={v}
-                    onChange={handleChange}
-                  />
-                  <span className="slider round"></span>
-                </label>
-              </td>
-            </tr>
-          );
-        })}
-      </table> */}
       <br />
       <label>Name</label>
       <input type="text" name="name" onKeyUp={handleChange} />
@@ -287,3 +185,5 @@ function App() {
 }
 
 export default App;
+
+
